@@ -18,7 +18,8 @@ a number of scripts to parse the collected results and draw some figures.
       $ nodejs headless-video-player.js https://ivisa.named-data.net/html/ndn_vs_ip.html
 
 ## Schedule the runs
-Add the following lines to crontab task manager to watch a video over IP and NDN every 30 minutes (runt `$ cront -e`):
+Add the following lines to crontab task manager to watch a video over IP and NDN every 30 minutes
+(run `$ cront -e`):
 
         */30 *  *   *   *     /usr/bin/node /home/chavoosh/icdn/scripts/headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ndn-research-questions.html
         */30 *  *   *   *     /usr/bin/node /home/chavoosh/icdn/scripts/headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ip-research-questions.html
