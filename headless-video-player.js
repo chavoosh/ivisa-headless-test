@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer-core');
-const devices = require('puppeteer/DeviceDescriptors');
 const fs = require('fs');
 
 
@@ -53,7 +52,6 @@ fs.writeFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', HEADER, (err) => { if (err) 
 (async () => {
   const browser = await puppeteer.launch({executablePath: EXEC, args: ['--disable-web-security'], headless: true});
   const page = await browser.newPage();
-  //await page.emulate(devices['iPhone X']);
   page.on('console', msg => {
     line = new Date().getHours() + ':' +
            new Date().getMinutes() + ':' +
