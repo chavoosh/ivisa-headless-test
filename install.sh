@@ -20,6 +20,12 @@ sudo apt-get update && wait
 sudo apt-get --fix-broken install && wait
 sudo apt-get install google-chrome-stable && wait
 
+# Install ndnping
+if hash ndnping 2>/dev/null; then
+  echo "ndnping already exist!"
+else
+  sudo cp ndnping /usr/bin/
+
 # Clone the repository in home directory and run a quick test
 sudo apt-get install git && wait
 (cd ~ && git clone https://github.com/chavoosh/ivisa-headless-test && wait)
