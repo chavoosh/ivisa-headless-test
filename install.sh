@@ -7,10 +7,9 @@ sudo apt-get install npm && wait
 
 # Install packages
 npm i puppeteer-core && wait
-npm i ping && wait
 
 # Install Python
- sudo apt-get install python2.7
+sudo apt-get install python2.7
 
 # Install Google Chrome
 sudo bash -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
