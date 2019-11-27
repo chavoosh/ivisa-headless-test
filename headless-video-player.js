@@ -1,6 +1,47 @@
 const puppeteer = require('puppeteer-core');
 const fs = require('fs');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
+//const ping = require('ping');
+
+// ==========================
+// Resolve RTT to the server
+// ==========================
+async function resolveRtt(host) {
+  if (host.search('ndn@') > -1) { // NDN
+    host = host.split('@')[1];
+    try {
+      var { stdout, stderr } = await exec('curl -s http://ndndemo.arl.wustl.edu/testbed-nodes.json | grep -i ' + host + ' -A 1 | grep "prefix" | awk -F\'"\' \'{print $4}\'');
+      var pingname = stdout;
+      var { stdout, stderr } = await exec('ndnping -c 10 ' + pingname);
+      console.log('\n===================================');
+      console.log(stdout);
+      console.log('===================================');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  else if (host.search('ip@') > -1) { // IP
+    host = host.split('@')[1];
+    try {
+      var { stdout, stderr } = await exec('ping -c 10 ' + host);
+      console.log('\n===================================');
+      console.log(stdout);
+      console.log('===================================');
+    } catch (err) {
+      console.log(err);
+    }
+    try {
+      var { stdout, stderr } = await exec('traceroute ' + host);
+      console.log('\n===================================');
+      console.log(stdout);
+      console.log('===================================');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
 
 // =============================
 //  Check the results directory
@@ -65,6 +106,11 @@ fs.writeFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', HEADER, (err) => { if (err) 
     if (CONS_OUT)  console.log(line);
     fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
 
+    if (msg.text().search('CONNECTING TO') > -1) {
+      var host = msg.text().split('>')[1].split(':')[0];
+      resolveRtt(host);
+    }
+
     if (msg.text().search('buffered to end of presentation') > -1) {
       browser.close();
     }
@@ -87,3 +133,5 @@ fs.writeFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', HEADER, (err) => { if (err) 
   await page.waitFor(2000);
   await page.screenshot({ path: RESULT_DIR + VIDEO_DATE_TIME + '.png' });
 })();
+
+
