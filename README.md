@@ -8,7 +8,7 @@ a number of scripts to parse the collected results and draw some figures.
 - Install [nodejs](https://nodejs.org/en/)
 - Install [Puppeteer-Core](https://www.npmjs.com/package/puppeteer#puppeteer-core)
 - Install [Google Chrome Browser](https://support.google.com/chrome/answer/95346?co=GENIE.Platform%3DDesktop&hl=en)
-- Install python 2.7.x
+- Install python `2.7.x`
 
       $ sudo apt-get install python2.7
 
