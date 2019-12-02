@@ -3,12 +3,12 @@
 # DESCRIPTION:
 # Feed this file with a *collection* of log files collected
 # by pupeteer script.
-#    e.g., python startup-delay.py -n <dir>/ip-<video-name>\*.log
+#    e.g., python rtt.py -n <dir>/ip-<video-name>\*.log
 #    This means process all ip log files for a specific video.
 #
 #
-# The output is a plot, showing the number of rebufferings of
-# different streams of the same video.
+# The output is a plot, showing the average round-trip time to the
+# edge server for different streams of the same video.
 #
 # author: Chavoosh Ghasemi <chghasemi@cs.arizona.edu>
 #=============================================================
@@ -22,8 +22,8 @@ import subprocess
 ndn_data = "ndn-data.txt"
 ip_data  = "ip-data.txt"
 
-ndn_rebufferings = []
-ip_rebufferings = []
+ndn_rtts = []
+ip_rtts = []
 
 ndn_log_files = ""
 ip_log_files  = ""
@@ -55,11 +55,12 @@ def process_log(logs, arg):
     filenames = sorted(glob.glob(logs))
     for f in filenames:
         for line in reversed(open(f).readlines()):
-            # Startup delay is at the bottom of the file
-            if (line.find("Number of bufferings:") != -1):
+            # both ndnping and ip ping have this line 
+            if (line.find("min/avg/max/mdev") != -1):
                 line = line.strip();
-                # Log file | Startup Delay (s)
-                arg.append((f, line.split(': ')[1]));
+                # Log file | Min RTT | Avg RTT | Max RTT (ms)
+                tokens = line.split('=')[1].split('/');
+                arg.append((f, tokens[0].split(' ')[1], tokens[1], tokens[2]));
                 break;
 
 
@@ -73,7 +74,7 @@ def process_log(logs, arg):
 def populate_data(fname, arg):
     f = open(fname, "w+")
     for s in arg:
-        f.write("%s %s\n" % (s[0], s[1]))
+        f.write("%s %s %s %s\n" % (s[0], s[1], s[2], s[3]))
     f.close()
 
 
@@ -88,27 +89,74 @@ def plotter(data1, data2=None):
     f = open("plot.txt", "w+")
     if data2 != None:
         f.writelines(["set terminal dumb size 100, 20\n",
-                      "set title 'Number of Rebufferings'\n",
+                      "set title 'Minimum RTT to gateway'\n",
                       "set key outside top right\n",
                       "set ytics out\n",
                       "set xtics out\n",
                       "unset xtics\n",
                       "set xlabel 'runs'\n",
-                      "set ylabel 'Est. Bandwidth'\n",
+                      "set ylabel 'Min RTT to GW (ms)'\n",
                       "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
                       "plot '",data1,"' using 2:xticlabels(1) title '",data1,"' w points",
-                      ", '",data2,"' using 2:xticlabels(1) title '",data2,"' w points"])
-    else:
+                      ", '",data2,"' using 2:xticlabels(1) title '",data2,"' w points\n"])
+    
         f.writelines(["set terminal dumb size 100, 20\n",
-                      "set title 'Number of Rebufferings'\n",
+                      "set title 'Average RTT to gateway'\n",
                       "set key outside top right\n",
                       "set ytics out\n",
                       "set xtics out\n",
                       "unset xtics\n",
                       "set xlabel 'runs'\n",
-                      "set ylabel 'Est. Bandwidth'\n",
+                      "set ylabel 'Avg RTT to GW (ms)'\n",
                       "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
-                      "plot '",data1,"' using 2:xticlabels(1) title '",data1,"' w points"])
+                      "plot '",data1,"' using 3:xticlabels(1) title '",data1,"' w points",
+                      ", '",data2,"' using 3:xticlabels(1) title '",data2,"' w points\n"])
+ 
+        f.writelines(["set terminal dumb size 100, 20\n",
+                      "set title 'Maximum RTT to gateway'\n",
+                      "set key outside top right\n",
+                      "set ytics out\n",
+                      "set xtics out\n",
+                      "unset xtics\n",
+                      "set xlabel 'runs'\n",
+                      "set ylabel 'Max RTT to GW (ms)'\n",
+                      "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
+                      "plot '",data1,"' using 4:xticlabels(1) title '",data1,"' w points",
+                      ", '",data2,"' using 4:xticlabels(1) title '",data2,"' w points\n"])
+
+    else:
+        f.writelines(["set terminal dumb size 100, 20\n",
+                      "set title 'Minimum RTT to gateway'\n",
+                      "set key outside top right\n",
+                      "set ytics out\n",
+                      "set xtics out\n",
+                      "unset xtics\n",
+                      "set xlabel 'runs'\n",
+                      "set ylabel 'Min RTT to GW (ms)'\n",
+                      "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
+                      "plot '",data1,"' using 2:xticlabels(1) title '",data1,"' w points\n"])
+
+        f.writelines(["set terminal dumb size 100, 20\n",
+                      "set title 'Average RTT to gateway'\n",
+                      "set key outside top right\n",
+                      "set ytics out\n",
+                      "set xtics out\n",
+                      "unset xtics\n",
+                      "set xlabel 'runs'\n",
+                      "set ylabel 'Avg RTT to GW (ms)'\n",
+                      "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
+                      "plot '",data1,"' using 3:xticlabels(1) title '",data1,"' w points\n"])
+ 
+        f.writelines(["set terminal dumb size 100, 20\n",
+                      "set title 'Maximum RTT to gateway'\n",
+                      "set key outside top right\n",
+                      "set ytics out\n",
+                      "set xtics out\n",
+                      "unset xtics\n",
+                      "set xlabel 'runs'\n",
+                      "set ylabel 'Max RTT to GW (ms)'\n",
+                      "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
+                      "plot '",data1,"' using 4:xticlabels(1) title '",data1,"' w points\n"])
     f.close()
 
     command = "gnuplot plot.txt"
@@ -126,11 +174,11 @@ def plotter(data1, data2=None):
 #        Run
 # ====================
 if ndn_log_files != "" :
-    process_log(ndn_log_files, ndn_rebufferings)
-    populate_data(ndn_data, ndn_rebufferings)
+    process_log(ndn_log_files, ndn_rtts)
+    populate_data(ndn_data, ndn_rtts)
 if ip_log_files != "" :
-    process_log(ip_log_files, ip_rebufferings)
-    populate_data(ip_data, ip_rebufferings)
+    process_log(ip_log_files, ip_rtts)
+    populate_data(ip_data, ip_rtts)
 
 if ndn_log_files == "":
     plotter(ip_data)

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #=============================================================
 # DESCRIPTION:
-# Feed this file with the a *collections* of log files collected
+# Feed this file with a *collection* of log files collected
 # by pupeteer script.
 #    e.g., python startup-delay.py -n <dir>/ip-<video-name>\*.log
 #    This means process all ip log files for a specific video.
@@ -16,7 +16,7 @@
 import os
 import sys
 import glob
-import getopt
+import argparse
 import subprocess
 
 ndn_data = "ndn-data.txt"
@@ -28,32 +28,20 @@ ip_startups = []
 ndn_log_files = ""
 ip_log_files  = ""
 
-def print_help():
-    print "program usage:\n\tpython startup-delay.py\n",\
-          "\t-n: ndn log files (escape the wildcard characters)\n",\
-          "\t-p: ip log file (escape the wildcard characters)\n"
-    sys.exit(2)
-
 # =============
 #    Input
 # =============
-if len(sys.argv) <= 1:
-    print_help();
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "n:p:")
-except getopt.GetoptError:
-    print_help();
-
-if len(opts) == 0:
-    print_help();
-
-for opt, arg in opts:
-    if opt == '-n':
-        ndn_log_files = arg
-    elif opt == '-p':
-        ip_log_files = arg
-    else:
-        print_help();
+parser = argparse.ArgumentParser()
+parser.add_argument('-n', '--nfiles', help='path to collection of ndn log file', action= 'store', metavar='')
+parser.add_argument('-p', '--pfiles', help='path to collection of ip log file', action= 'store', metavar='')
+if len(sys.argv)==1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
+args = parser.parse_args()
+if (args.nfiles):
+    ndn_log_files = args.nfiles
+if (args.pfiles):
+    ip_log_files = args.pfiles
 
 
 # =========================================================

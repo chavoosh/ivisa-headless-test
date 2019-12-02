@@ -1,10 +1,11 @@
 #!/usr/bin/python
 #=============================================================
 # DESCRIPTION:
-# Feed this file with the collected log file of pupeteer script.
+# Feed this file with the a *collection* of log files collected
+# by puppeteer script.
 #
-# The output is a plot, showing the percentile of video resolutions
-# during each playback.
+# The output is a plot, showing the distribution of of experienced
+# video resolutions during each playback.
 #
 # author: Chavoosh Ghasemi <chghasemi@cs.arizona.edu>
 #=============================================================
@@ -12,7 +13,7 @@
 import os
 import sys
 import glob
-import getopt
+import argparse
 import subprocess
 
 ndn_log_files = ""
@@ -24,36 +25,23 @@ ip_data  = "ip-data.txt"
 ndn_res = {} 
 ip_res  = {} 
 
-def print_help():
-    print "program usage:\n\tpython resolution.py\n",\
-          "\t-n: ndn log file\n",\
-          "\t-p: ip log file\n"
-    sys.exit(2)
-
-
 # =============
 #    Input
 # =============
-if len(sys.argv) == 1:
-    print_help()
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "p:n:")
-except getopt.GetoptError:
-    print_help()
-
-if len(opts) == 0:
-    print_help()
-
-for opt, arg in opts:
-    if opt == '-n':
-        ndn_log_files = arg
-    elif opt == '-p':
-        ip_log_files = arg
-    else:
-         print_help()
+parser = argparse.ArgumentParser()
+parser.add_argument('-n', '--nfiles', help='path to a collection of ndn log files', action= 'store', metavar='')
+parser.add_argument('-p', '--pfiles', help='path to a collection of ip log files', action= 'store', metavar='')
+if len(sys.argv)==1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
+args = parser.parse_args()
+if (args.nfiles):
+    ndn_log_files = args.nfiles
+if (args.pfiles):
+    ip_log_files = args.pfiles
 
 
-def bandwidth_categorizer(bw, arg): 
+def bandwidth_categorizer(bw, arg):
     if (bw < 600):
         arg["240p"] += 1
     elif (bw < 1500):

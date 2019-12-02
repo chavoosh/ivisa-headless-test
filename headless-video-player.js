@@ -3,7 +3,15 @@ const fs = require('fs');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-//const ping = require('ping');
+// ==========================
+//         utility
+// ==========================
+function sectionize(content) {
+  var line = '\n===================================\n';
+  line += content;
+  line += '===================================';
+  return line;
+}
 
 // ==========================
 // Resolve RTT to the server
@@ -15,9 +23,9 @@ async function resolveRtt(host) {
       var { stdout, stderr } = await exec('curl -s http://ndndemo.arl.wustl.edu/testbed-nodes.json | grep -i ' + host + ' -A 1 | grep "prefix" | awk -F\'"\' \'{print $4}\'');
       var pingname = stdout;
       var { stdout, stderr } = await exec('ndnping -c 10 ' + pingname);
-      console.log('\n===================================');
-      console.log(stdout);
-      console.log('===================================');
+      var line = sectionize(stdout);
+      console.log(line);
+      fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
     } catch (err) {
       console.log(err);
     }
@@ -26,17 +34,17 @@ async function resolveRtt(host) {
     host = host.split('@')[1];
     try {
       var { stdout, stderr } = await exec('ping -c 10 ' + host);
-      console.log('\n===================================');
-      console.log(stdout);
-      console.log('===================================');
+      var line = sectionize(stdout);
+      console.log(line);
+      fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
     } catch (err) {
       console.log(err);
     }
     try {
       var { stdout, stderr } = await exec('traceroute ' + host);
-      console.log('\n===================================');
-      console.log(stdout);
-      console.log('===================================');
+      var line = sectionize(stdout);
+      console.log(line);
+      fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
     } catch (err) {
       console.log(err);
     }

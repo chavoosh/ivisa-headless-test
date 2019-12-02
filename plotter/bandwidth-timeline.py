@@ -11,7 +11,7 @@
 
 import os
 import sys
-import getopt
+import argparse
 import subprocess
 
 ndn_log_file = ""
@@ -23,33 +23,21 @@ ip_bw  = []
 ndn_data = "ndn-data.txt"
 ip_data  = "ip-data.txt"
 
-def print_help():
-    print "program usage:\n\tpython bandwidth-timeline.py\n",\
-          "\t-n: ndn log file\n",\
-          "\t-p: ip log file\n"
-    sys.exit(2)
-
-
 # =============
 #    Input
 # =============
-if len(sys.argv) == 1:
-    print_help()
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "p:n:")
-except getopt.GetoptError:
-    print_help()
+parser = argparse.ArgumentParser()
+parser.add_argument('-n', '--nfile', help='path to a ndn log file', action= 'store', metavar='')
+parser.add_argument('-p', '--pfile', help='path to an ip log file', action= 'store', metavar='')
+if len(sys.argv)==1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
+args = parser.parse_args()
+if (args.nfile):
+    ndn_log_file = args.nfile
+if (args.pfile):
+    ip_log_file = args.pfile
 
-if len(opts) == 0:
-    print_help()
-
-for opt, arg in opts:
-    if opt == '-n':
-        ndn_log_file = arg
-    elif opt == '-p':
-        ip_log_file = arg
-    else:
-         print_help()
 
 # =========================================================
 # Extract the desired information from the input log file

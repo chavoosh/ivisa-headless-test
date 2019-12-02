@@ -3,12 +3,16 @@
 # DESCRIPTION:
 # Feed this file with a *collection* of log files collected
 # by pupeteer script.
-#    e.g., python startup-delay.py -n <dir>/ip-<video-name>\*.log
+#    e.g., python ttfb.py -n <dir>/ip-<video-name>\*.log
 #    This means process all ip log files for a specific video.
 #
 #
-# The output is a plot, showing the number of rebufferings of
-# different streams of the same video.
+# The output is a plot, showing Time To First Byte (TTFB) which
+# shows the delay between the content server and the consumer.
+# If this number is close to the RTT to GW, then we can say the
+# content comes from the GW (i.e., the edge server), otherwise
+# it means the edge server experienced cache miss and asked the
+# content from another server.
 #
 # author: Chavoosh Ghasemi <chghasemi@cs.arizona.edu>
 #=============================================================
@@ -22,8 +26,8 @@ import subprocess
 ndn_data = "ndn-data.txt"
 ip_data  = "ip-data.txt"
 
-ndn_rebufferings = []
-ip_rebufferings = []
+ndn_ttfbs = []
+ip_ttfbs = []
 
 ndn_log_files = ""
 ip_log_files  = ""
@@ -55,10 +59,10 @@ def process_log(logs, arg):
     filenames = sorted(glob.glob(logs))
     for f in filenames:
         for line in reversed(open(f).readlines()):
-            # Startup delay is at the bottom of the file
-            if (line.find("Number of bufferings:") != -1):
+            # both ndnping and ip ping have this line 
+            if (line.find("Unload latency") != -1):
                 line = line.strip();
-                # Log file | Startup Delay (s)
+                # Log file | TTFB (s)
                 arg.append((f, line.split(': ')[1]));
                 break;
 
@@ -88,27 +92,27 @@ def plotter(data1, data2=None):
     f = open("plot.txt", "w+")
     if data2 != None:
         f.writelines(["set terminal dumb size 100, 20\n",
-                      "set title 'Number of Rebufferings'\n",
+                      "set title 'Time To First Byte'\n",
                       "set key outside top right\n",
                       "set ytics out\n",
                       "set xtics out\n",
                       "unset xtics\n",
                       "set xlabel 'runs'\n",
-                      "set ylabel 'Est. Bandwidth'\n",
+                      "set ylabel 'TTFB (s)'\n",
                       "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
                       "plot '",data1,"' using 2:xticlabels(1) title '",data1,"' w points",
-                      ", '",data2,"' using 2:xticlabels(1) title '",data2,"' w points"])
+                      ", '",data2,"' using 2:xticlabels(1) title '",data2,"' w points\n"])
     else:
         f.writelines(["set terminal dumb size 100, 20\n",
-                      "set title 'Number of Rebufferings'\n",
+                      "set title 'Minimum RTT to gateway'\n",
                       "set key outside top right\n",
                       "set ytics out\n",
                       "set xtics out\n",
                       "unset xtics\n",
                       "set xlabel 'runs'\n",
-                      "set ylabel 'Est. Bandwidth'\n",
+                      "set ylabel 'TTFB (s)'\n",
                       "set offset graph 0.1, graph 0.1, graph 0.1, graph 0.1\n",
-                      "plot '",data1,"' using 2:xticlabels(1) title '",data1,"' w points"])
+                      "plot '",data1,"' using 2:xticlabels(1) title '",data1,"' w points\n"])
     f.close()
 
     command = "gnuplot plot.txt"
@@ -126,11 +130,11 @@ def plotter(data1, data2=None):
 #        Run
 # ====================
 if ndn_log_files != "" :
-    process_log(ndn_log_files, ndn_rebufferings)
-    populate_data(ndn_data, ndn_rebufferings)
+    process_log(ndn_log_files, ndn_ttfbs)
+    populate_data(ndn_data, ndn_ttfbs)
 if ip_log_files != "" :
-    process_log(ip_log_files, ip_rebufferings)
-    populate_data(ip_data, ip_rebufferings)
+    process_log(ip_log_files, ip_ttfbs)
+    populate_data(ip_data, ip_ttfbs)
 
 if ndn_log_files == "":
     plotter(ip_data)
