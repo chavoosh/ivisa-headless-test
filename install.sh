@@ -33,4 +33,4 @@ else
 fi
 
 # Run a quick test
-(cd ~/ivisa-headless-test && nodejs headless-video-player.js https://ivisa.named-data.net/html/ndn_vs_ip.html && wait)
+(cd ~/ivisa-headless-test && nodejs headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ip-research-questions.html &)
