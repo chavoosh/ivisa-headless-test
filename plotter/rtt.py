@@ -54,6 +54,7 @@ if (args.pfiles):
 def process_log(logs, arg):
     filenames = sorted(glob.glob(logs))
     for f in filenames:
+        valid = False;
         for line in reversed(open(f).readlines()):
             # both ndnping and ip ping have this line 
             if (line.find("min/avg/max/mdev") != -1):
@@ -61,7 +62,10 @@ def process_log(logs, arg):
                 # Log file | Min RTT | Avg RTT | Max RTT (ms)
                 tokens = line.split('=')[1].split('/');
                 arg.append((f, tokens[0].split(' ')[1], tokens[1], tokens[2]));
+                valid = True;
                 break;
+        if valid == False:
+            print 'file ' + f + ' is not a valid log file...'
 
 
 # =========================================================

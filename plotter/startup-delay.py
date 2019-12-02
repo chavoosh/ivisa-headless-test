@@ -54,13 +54,17 @@ if (args.pfiles):
 def process_log(logs, arg):
     filenames = sorted(glob.glob(logs))
     for f in filenames:
+        valid = False;
         for line in reversed(open(f).readlines()):
             # Startup delay is at the bottom of the file
             if (line.find("Startup: ") != -1):
                 line = line.strip();
                 # Log file | Startup Delay (s)
                 arg.append((f, line.split(' ')[2]));
+                valid = True;
                 break;
+        if valid == False:
+            print 'file ' + f + ' is not a valid log file...'
 
 
 # =========================================================

@@ -58,13 +58,17 @@ if (args.pfiles):
 def process_log(logs, arg):
     filenames = sorted(glob.glob(logs))
     for f in filenames:
+        valid = False;
         for line in reversed(open(f).readlines()):
             # both ndnping and ip ping have this line 
             if (line.find("Unload latency") != -1):
                 line = line.strip();
                 # Log file | TTFB (s)
                 arg.append((f, line.split(': ')[1]));
+                valid = True;
                 break;
+        if valid == False:
+            print 'file ' + f + ' is not a valid log file...'
 
 
 # =========================================================
