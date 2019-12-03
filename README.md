@@ -5,12 +5,8 @@ a number of scripts to parse the collected results and draw some figures.
 
 
 ## Install
-- Install [nodejs](https://nodejs.org/en/)
-- Install [Puppeteer-Core](https://www.npmjs.com/package/puppeteer#puppeteer-core)
-- Install [Google Chrome Browser](https://support.google.com/chrome/answer/95346?co=GENIE.Platform%3DDesktop&hl=en)
-- Install python `2.7.x`
-
-      $ sudo apt-get install python2.7
+- Install `ndnping` from [ndn-tools](https://github.com/named-data/ndn-tools)
+- Run `$ bash install.sh`
 
 ## Run
 - Switch to the repo root directory and run the following command:
