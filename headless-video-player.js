@@ -20,7 +20,7 @@ async function resolveRtt(host) {
   if (host.search('ndn@') > -1) { // NDN
     host = host.split('@')[1];
     try {
-      var { stdout, stderr } = await exec('curl -s http://ndndemo.arl.wustl.edu/testbed-nodes.json | grep -i ' + host + ' -A 1 | grep "prefix" | awk -F\'"\' \'{print $4}\'');
+      var { stdout, stderr } = await exec('curl -s http://ndndemo.arl.wustl.edu/testbed-nodes.json | grep -i ' + host + ' -C 2 | grep "prefix" | awk -F\'"\' \'{print $4}\'');
       var pingname = stdout;
       var { stdout, stderr } = await exec('ndnping -c 10 ' + pingname);
       var line = sectionize(stdout);

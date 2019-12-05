@@ -20,10 +20,6 @@ sudo apt-get update
 sudo apt-get --fix-broken install
 sudo apt-get install google-chrome-stable
 
-# Clone the repository in home directory
-sudo apt-get install git
-(cd ~ && git clone https://github.com/chavoosh/ivisa-headless-test && wait)
-
 # Check ndnping
 if hash ndnping 2>/dev/null; then
   echo "ndnping exist!"
@@ -33,4 +29,4 @@ else
 fi
 
 # Run a quick test
-(cd ~/ivisa-headless-test && nodejs headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ip-research-questions.html)
+nodejs headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ip-research-questions.html
