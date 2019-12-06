@@ -28,6 +28,7 @@ async function resolveRtt(host) {
       fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
     } catch (err) {
       console.log(err);
+      fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', err + '\n', (err) => { if (err) throw err; });
     }
   }
   else if (host.search('ip@') > -1) { // IP
@@ -39,6 +40,7 @@ async function resolveRtt(host) {
       fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
     } catch (err) {
       console.log(err);
+      fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', err + '\n', (err) => { if (err) throw err; });
     }
     try {
       var { stdout, stderr } = await exec('traceroute ' + host);
@@ -47,6 +49,7 @@ async function resolveRtt(host) {
       fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
     } catch (err) {
       console.log(err);
+      fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', err + '\n', (err) => { if (err) throw err; });
     }
   }
 };
