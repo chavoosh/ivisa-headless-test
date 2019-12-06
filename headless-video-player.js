@@ -22,7 +22,7 @@ async function resolveRtt(host) {
     try {
       var { stdout, stderr } = await exec('curl -s http://ndndemo.arl.wustl.edu/testbed-nodes.json | grep -i ' + host + ' -C 2 | grep "prefix" | awk -F\'"\' \'{print $4}\'');
       var pingname = stdout;
-      var { stdout, stderr } = await exec('ndnping -c 10 ' + pingname);
+      var { stdout, stderr } = await exec('/usr/local/bin/ndnping -c 10 ' + pingname);
       var line = sectionize(stdout);
       console.log(line);
       fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
