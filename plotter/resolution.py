@@ -86,6 +86,9 @@ def process_log(logs, arg):
             total += 1
             line = f.readline()
 
+        if total == 0:
+            print ('WARNING: %s is not a valid log file or empty' % fname)
+            continue
         for k in resolutions:
             resolutions[k] = float(resolutions[k]) / float(total)
 
