@@ -20,16 +20,27 @@ async function resolveRtt(host) {
   if (host.search('ndn@') > -1) { // NDN
     host = host.split('@')[1];
     try {
+      // Make a UDP tunnel to the chosen hub to run ndnping
       var { stdout, stderr } = await exec('curl -s http://ndndemo.arl.wustl.edu/testbed-nodes.json | grep -i ' + host + ' -C 2 | grep "prefix" | awk -F\'"\' \'{print $4}\'');
-      var pingname = stdout;
-      var { stdout, stderr } = await exec('/usr/local/bin/ndnping -c 10 ' + pingname);
-      var line = sectionize(stdout);
+      var prefixname = stdout.split(':')[1];
+      var { stdout, stderr } = await exec('/usr/local/bin/nfdc face create udp://' + host + ' && sleep 3 && /usr/local/bin/nfdc route add / udp://' + host + ' && sleep 1');
+      var line = sectionize(stdout + '\n' + stderr);
+      fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
+      console.log(line);
+
+      // Run ndnping
+      var { stdout, stderr } = await exec('/usr/local/bin/ndnping -c 10 ' + prefixname);
+      line = sectionize(stdout);
       console.log(line);
       fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });
     } catch (err) {
       console.log(err);
       fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', err + '\n', (err) => { if (err) throw err; });
     }
+    // Destroy the created face in NFD
+    var { stdout, stderr } = await exec('/usr/local/bin/nfdc face destroy udp://' + host);
+    var line = sectionize(stdout + '\n' + stderr);
+    console.log(line);
   }
   else if (host.search('ip@') > -1) { // IP
     host = host.split('@')[1];
