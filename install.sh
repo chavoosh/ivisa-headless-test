@@ -21,12 +21,20 @@ sudo apt-get --fix-broken install
 sudo apt-get install google-chrome-stable
 
 # Check ndnping
+if hash nfdc 2>/dev/null; then
+  echo "NFDC exist!"
+else
+  echo -e "\n\tERROR: NFDC does not exist... Please install NFD from here https://github.com/named-data/NFD"
+  exit 1
+fi
+
 if hash ndnping 2>/dev/null; then
   echo "ndnping exist!"
 else
   echo -e "\n\tERROR: ndnping does not exist... Please install it from here https://github.com/named-data/ndn-tools"
   exit 1
 fi
+
 
 # Run a quick test
 nodejs headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ip-research-questions.html
