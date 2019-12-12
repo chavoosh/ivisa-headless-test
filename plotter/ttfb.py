@@ -61,9 +61,9 @@ def process_log(logs, arg):
         valid = False;
         for line in reversed(open(f).readlines()):
             # both ndnping and ip ping have this line 
-            if (line.find("Unload latency") != -1):
+            if (line.find("TTFB") != -1):
                 line = line.strip();
-                # Log file | TTFB (s)
+                # Log file | TTFB (ms)
                 arg.append((f, line.split(': ')[1]));
                 valid = True;
                 break;

@@ -57,10 +57,10 @@ def process_log(logs, arg):
         valid = False;
         for line in reversed(open(f).readlines()):
             # Startup delay is at the bottom of the file
-            if (line.find("Startup: ") != -1):
+            if (line.find("Load latency: ") != -1):
                 line = line.strip();
                 # Log file | Startup Delay (s)
-                arg.append((f, line.split(' ')[2]));
+                arg.append((f, line.split(': ')[1]));
                 valid = True;
                 break;
         if valid == False:
