@@ -1,0 +1,21 @@
+#-----------------------------
+# Watch video from different CDNs by using following URLs.
+#-----------------------------
+
+# Akamai
+http://ivisa-icdn-1.dynu.net/html/akamai-ip-ndn_vs_ip.html
+
+# Fastly
+http://ivisa-icdn-1.dynu.net.global.prod.fastly.net/html/fastly-ip-ndn_vs_ip.html
+
+# CDNSun
+http://cdnsun.ivisa-icdn-1.dynu.net/html/cdnsun-ip-ndn_vs_ip.html
+
+# BitsNgo
+http://bitsngo.ivisa-icdn-1.dynu.net/html/bitsngo-ip-ndn_vs_ip.html
+
+# Azure
+http://ivisa-icdn-1.azureedge.net/html/azure-ip-ndn_vs_ip.html
+
+# NDN
+http://150.135.68.166/html/ndn-ndn_vs_ip.html
