@@ -18,3 +18,8 @@ Add the following line to crontab task manager to watch a video over IP and NDN 
 (run `$ cront -e`):
   
     */30 *  *   *   *     /bin/bash /home/<USER_NAME>/ivisa-headless-test/run.sh
+
+## Note
+In these tests we use ping tool to measure the RTT to a given server (like Akamai server).
+However, sometimes the servers block ICMP messages. In that case, install [nmap package](https://nmap.org)
+and then use `nping` tool.

@@ -45,7 +45,7 @@ async function resolveRtt(host) {
   else if (host.search('ip@') > -1) { // IP
     host = host.split('@')[1];
     try {
-      var { stdout, stderr } = await exec('ping -c 10 ' + host);
+      var { stdout, stderr } = await exec('nping -c 10 ' + host);
       var line = sectionize(stdout);
       console.log(line);
       fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', line + '\n', (err) => { if (err) throw err; });

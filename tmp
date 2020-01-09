@@ -1,0 +1,15 @@
+Starting Nping 0.7.60 ( https://nmap.org/nping ) at 2020-01-09 18:02 UTC
+SENT (0.2452s) Starting TCP Handshake > ivisa-icdn-1.dynu.net:80 (104.86.182.16:80)
+RCVD (0.2522s) Handshake with ivisa-icdn-1.dynu.net:80 (104.86.182.16:80) completed
+SENT (1.2474s) Starting TCP Handshake > ivisa-icdn-1.dynu.net:80 (104.86.182.16:80)
+RCVD (1.2553s) Handshake with ivisa-icdn-1.dynu.net:80 (104.86.182.16:80) completed
+SENT (2.2505s) Starting TCP Handshake > ivisa-icdn-1.dynu.net:80 (104.86.182.16:80)
+RCVD (2.2585s) Handshake with ivisa-icdn-1.dynu.net:80 (104.86.182.16:80) completed
+SENT (3.2537s) Starting TCP Handshake > ivisa-icdn-1.dynu.net:80 (104.86.182.16:80)
+RCVD (3.2605s) Handshake with ivisa-icdn-1.dynu.net:80 (104.86.182.16:80) completed
+SENT (4.2558s) Starting TCP Handshake > ivisa-icdn-1.dynu.net:80 (104.86.182.16:80)
+RCVD (4.2639s) Handshake with ivisa-icdn-1.dynu.net:80 (104.86.182.16:80) completed
+
+Max rtt: 8.026ms | Min rtt: 6.749ms | Avg rtt: 7.526ms
+TCP connection attempts: 5 | Successful connections: 5 | Failed: 0 (0.00%)
+Nping done: 1 IP address pinged in 4.26 seconds

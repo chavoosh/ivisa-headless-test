@@ -56,12 +56,18 @@ def process_log(logs, arg):
     for f in filenames:
         valid = False;
         for line in reversed(open(f).readlines()):
-            # both ndnping and ip ping have this line 
-            if (line.find("min/avg/max/mdev") != -1):
+            if (line.find("min/avg/max/mdev") != -1): # ndnping & ping
                 line = line.strip();
                 # Log file | Min RTT | Avg RTT | Max RTT (ms)
                 tokens = line.split('=')[1].split('/');
                 arg.append((f, tokens[0].split(' ')[1], tokens[1], tokens[2]));
+                valid = True;
+                break;
+            elif (line.find("Max rtt:") != -1): # Nping
+                line = line.strip();
+                # Log file | Min RTT | Avg RTT | Max RTT (ms)
+                tokens = line.split(' ');
+                arg.append((f, tokens[6].split('m')[0], tokens[10].split('m')[0], tokens[2].split('m')[0]));
                 valid = True;
                 break;
         if valid == False:
