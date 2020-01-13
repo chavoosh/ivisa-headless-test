@@ -37,4 +37,4 @@ fi
 
 
 # Run a quick test
-nodejs headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ip-research-questions.html
+nodejs headless-video-player.js http://ivisa-icdn-1.dynu.net/html/ip-ndn_vs_ip.html
