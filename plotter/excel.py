@@ -16,6 +16,7 @@
 import os
 import sys
 import glob
+import copy
 import argparse
 import subprocess
 data  = "data.txt";
@@ -27,19 +28,8 @@ rtts = {'ndn'     : [],
         'bitsngo' : [],
         'cdnsun'  : []};
 
-startups = {'ndn'     : [],
-            'akamai'  : [],
-            'azure'   : [],
-            'fastly'  : [],
-            'bitsngo' : [],
-            'cdnsun'  : []};
-
-ttfbs = {'ndn'     : [],
-         'akamai'  : [],
-         'azure'   : [],
-         'fastly'  : [],
-         'bitsngo' : [],
-         'cdnsun'  : []};
+startups = copy.deepcopy(rtts);
+ttfbs = copy.deepcopy(rtts);
 
 logs = '';
 filenames = '';
@@ -97,13 +87,14 @@ def rtt():
           'bitsngo-min bitsngo-avg bitsngo-max';
     while 1==1:
         line = '[' + str(walker) + '] ';
+        valid = False;
         for c in ['ndn', 'akamai', 'azure', 'fastly', 'cdnsun', 'bitsngo']:
             if len(rtts[c]) > walker:
+                valid = True;
                 line += rtts[c][walker][0] + ',' + rtts[c][walker][1] + ',' + rtts[c][walker][2] + ' ';
             else:
                 line += 'NULL NULL NULL '
-        if line.find('NULL') != -1:
-            print '------------\nLast line:\n' + line + '\n------------';
+        if valid == False:
             break;
         print line;
         walker += 1;
@@ -130,14 +121,15 @@ def startup_delay():
     walker = 0;
     print 'index ndn akamai azure fastly cdnsun bitsngo';
     while 1==1:
+        valid = False;
         line = '[' + str(walker) + '] ';
         for c in ['ndn', 'akamai', 'azure', 'fastly', 'cdnsun', 'bitsngo']:
             if len(startups[c]) > walker:
-                line += startups[c][walker] + ' ';
+                valid = True;
+                line += str(startups[c][walker]) + ' ';
             else:
                 line += 'NULL '
-        if line.find('NULL') != -1:
-            print '------------\nLast line:\n' + line + '\n------------';
+        if valid == False:
             break;
         print line;
         walker += 1;
@@ -164,13 +156,14 @@ def ttfb():
     print 'index ndn akamai azure fastly cdnsun bitsngo';
     while 1==1:
         line = '[' + str(walker) + '] ';
+        valid = False;
         for c in ['ndn', 'akamai', 'azure', 'fastly', 'cdnsun', 'bitsngo']:
             if len(ttfbs[c]) > walker:
-                line += ttfbs[c][walker] + ' ';
+                valid = True;
+                line += str(ttfbs[c][walker]) + ' ';
             else:
                 line += 'NULL ';
-        if line.find('NULL') != -1:
-            print '------------\nLast line:\n' + line + '\n------------';
+        if valid == False:
             break;
         print line;
         walker += 1;
