@@ -30,6 +30,8 @@ rtts = {'ndn'     : [],
 
 startups = copy.deepcopy(rtts);
 ttfbs = copy.deepcopy(rtts);
+resolutions = copy.deepcopy(rtts);
+rebufferings = copy.deepcopy(rtts);
 
 logs = '';
 filenames = '';
@@ -47,10 +49,18 @@ if (args.logfiles):
     logs = args.logfiles;
     filenames = sorted(glob.glob(logs))
 
-# =========================================================
-# Extract the desired information from the input log file
-# and put it in arg.
-# =========================================================
+def bandwidth_categorizer(bw, arg):
+    if (bw < 600):
+        arg['240p'] += 1
+    elif (bw < 1500):
+        arg['360p'] += 1
+    elif (bw < 3000):
+        arg['480p'] += 1
+    elif (bw < 6000):
+        arg['720p'] += 1
+    else:
+        arg['1080p'] += 1
+
 def rtt():
     print '=============';
     print 'RTT FOR EXCEL';
@@ -93,7 +103,7 @@ def rtt():
                 valid = True;
                 line += rtts[c][walker][0] + ',' + rtts[c][walker][1] + ',' + rtts[c][walker][2] + ' ';
             else:
-                line += 'NULL NULL NULL '
+                line += 'NULL,NULL,NULL '
         if valid == False:
             break;
         print line;
@@ -150,7 +160,6 @@ def ttfb():
                 break;
         if valid == False:
             print 'file ' + f + ' is not a valid log file...'
-
     # print
     walker = 0;
     print 'index ndn akamai azure fastly cdnsun bitsngo';
@@ -168,6 +177,99 @@ def ttfb():
         print line;
         walker += 1;
 
+def number_of_rebufferings():
+    print '=======================';
+    print 'REBUFFERINGS FOR EXCEL';
+    print '=======================';
+    for f in filenames:
+        valid = False;
+        for line in reversed(open(f).readlines()):
+            # Startup delay is at the bottom of the file
+            if (line.find("Number of bufferings:") != -1):
+                line = line.strip();
+                cdn = f.rpartition('/')[2].split('-')[0];
+                # Log file | Startup Delay (s)
+                rebufferings[cdn].append(line.split(': ')[1]);
+                valid = True;
+                break;
+        if valid == False:
+            print 'file ' + f + ' is not a valid log file...'
+    # print
+    walker = 0;
+    print 'index ndn akamai azure fastly cdnsun bitsngo';
+    while 1==1:
+        line = '[' + str(walker) + '] ';
+        valid = False;
+        for c in ['ndn', 'akamai', 'azure', 'fastly', 'cdnsun', 'bitsngo']:
+            if len(rebufferings[c]) > walker:
+                valid = True;
+                line += str(rebufferings[c][walker]) + ' ';
+            else:
+                line += 'NULL ';
+        if valid == False:
+            break;
+        print line;
+        walker += 1;
+
+def map_resolutions():
+    print '============================';
+    print 'NUM OF RESOLUTIONS FOR EXCEL';
+    print '============================';
+    # Required BW  : Number of samples
+    for f in filenames:
+        valid = False;
+        # Required BW  : Number of samples
+        resMap = {'240p'   : 0,
+                  '360p'   : 0,
+                  '480p'   : 0,
+                  '720p'   : 0,
+                  '1080p'  : 0}
+        total = 0
+        for line in reversed(open(f).readlines()):
+            if line.find('bandwidth=') != -1:
+                valid = True;
+                line = line.strip();
+                phrases = line.split(' ')
+                time = phrases[0] # time stamp always have a fixed position
+                bw = phrases[3].split('=')[1]
+                bandwidth_categorizer(float(bw), resMap)
+                total += 1
+
+        if valid == False:
+            print 'file ' + f + ' is not a valid log file...'
+            continue;
+        for k in resMap:
+            resMap[k] = float(resMap[k]) / float(total)
+        # save percentages for each log file
+        cdn = f.rpartition('/')[2].split('-')[0];
+        resolutions[cdn].append(resMap);
+
+    # print
+    walker = 0;
+    print 'index ' +\
+          'ndn-240p ndn-360p ndn-480p ndn-720p ndn-1080p ' +\
+          'akamai-240p akamai-360p akamai-480p akamai-720p akamai-1080p ' +\
+          'azure-240p azure-360p azure-480p azure-720p azure-1080p '    +\
+          'fastly-240p fastly-360p fastly-480p fastly-720p fastly-1080p ' +\
+          'cdnsun-240p cdnsun-360p cdnsun-480p cdnsun-720p cdnsun-1080p ' +\
+          'bitsngo-240p bitsngo-360p bitsngo-480p bitsngo-720p bitsngo-1080p';
+    while 1==1:
+        line = '[' + str(walker) + '] ';
+        valid = False;
+        for c in ['ndn', 'akamai', 'azure', 'fastly', 'cdnsun', 'bitsngo']:
+            if len(resolutions[c]) > walker:
+                valid = True;
+                line += str(resolutions[c][walker]['240p']) + ',' +\
+                        str(resolutions[c][walker]['360p']) + ',' +\
+                        str(resolutions[c][walker]['480p']) + ',' +\
+                        str(resolutions[c][walker]['720p']) + ',' +\
+                        str(resolutions[c][walker]['1080p']) + ' ';
+            else:
+                line += 'NULL,NULL,NULL,NULL,NULL ';
+        if valid == False:
+            break;
+        print line;
+        walker += 1;
 
 # ====================
 #        Run
@@ -175,3 +277,5 @@ def ttfb():
 rtt()
 startup_delay()
 ttfb()
+number_of_rebufferings()
+map_resolutions()

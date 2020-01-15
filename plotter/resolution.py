@@ -73,7 +73,6 @@ def process_log(logs, arg):
                        "1080p"  : 0}
         total = 0
         while line:
-            record = ""
             line = line.rstrip()
             if line.find('bandwidth=') == -1:
                 line = f.readline()
