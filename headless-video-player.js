@@ -30,6 +30,7 @@ async function resolveRtt(host) {
     console.log(err);
     fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', err + '\n', (err) => { if (err) throw err; });
   }
+/*
   try {
     var { stdout, stderr } = await exec('traceroute ' + host);
     var line = sectionize(stdout);
@@ -39,6 +40,7 @@ async function resolveRtt(host) {
     console.log(err);
     fs.appendFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', err + '\n', (err) => { if (err) throw err; });
   }
+*/
 };
 
 // =============================
