@@ -5,6 +5,7 @@ sudo apt-get update -y
 sudo apt-get install nodejs -y
 sudo apt-get install npm -y
 sudo apt-get install nmap -y
+sudo apt-get install gnuplot -y
 
 # Install packages
 npm i puppeteer-core
