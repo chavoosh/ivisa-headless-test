@@ -116,7 +116,7 @@ fs.writeFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', HEADER, (err) => { if (err) 
     }
   });
 
-  await page.goto(URL, {waitUntil: 'load', timeout: 5000});
+  await page.goto(URL, {waitUntil: 'load', timeout: 10000});
   await page.waitFor(1000);
 
   if (await page.$('video') !== null)  {
@@ -124,13 +124,13 @@ fs.writeFile(RESULT_DIR + VIDEO_DATE_TIME + '.log', HEADER, (err) => { if (err) 
     video.click();
   }
 
-  // check whether the video has been started after 8s
-  await page.waitFor(8000);
+  // check whether the video has been started after 15s
+  await page.waitFor(15000);
   if (START === false)
     await browser.close();
 
-  // take a screenshot after a cumulative 10s
-  await page.waitFor(2000);
+  // take a screenshot after a cumulative 20s
+  await page.waitFor(5000);
   await page.screenshot({ path: RESULT_DIR + VIDEO_DATE_TIME + '.png' });
 })();
 
