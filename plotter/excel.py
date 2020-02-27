@@ -18,7 +18,7 @@ import sys
 import copy
 import glob
 import json
-import socke
+import socket
 import argparse
 import subprocess
 
@@ -312,7 +312,7 @@ def map_resolutions():
     header = 'index';
     for c in ['ndn', 'akamai', 'azure', 'fastly', 'cdnsun', 'bitsngo']:
         if exist[c] == True:
-            header = header + ' ' + c + '-240p ' + c + '-360p ' + c + '-480p ' +
+            header = header + ' ' + c + '-240p ' + c + '-360p ' + c + '-480p ' +\
                      c + '-720p ' + c + '-1080p';
     print header;
     while 1==1:
@@ -323,10 +323,10 @@ def map_resolutions():
                 continue;
             if len(resolutions[c]) > walker:
                 valid = True;
-                line += str(resolutions[c][walker]['240p']) + ',' +
-                        str(resolutions[c][walker]['360p']) + ',' +
-                        str(resolutions[c][walker]['480p']) + ',' +
-                        str(resolutions[c][walker]['720p']) + ',' +
+                line += str(resolutions[c][walker]['240p']) + ',' +\
+                        str(resolutions[c][walker]['360p']) + ',' +\
+                        str(resolutions[c][walker]['480p']) + ',' +\
+                        str(resolutions[c][walker]['720p']) + ',' +\
                         str(resolutions[c][walker]['1080p']) + ' ';
             else:
                 line += 'NULL,NULL,NULL,NULL,NULL ';
@@ -378,11 +378,11 @@ def decorate():
             continue;
         header = '********\n' + bcolors.WARNING + bcolors.BOLD + c + bcolors.ENDC + '\n********\nindex';
         header += bcolors.OKGREEN + ' rtt-min rtt-avg rtt-max';
-        header += bcolors.OKBLUE + ' startup(s)' +
-                  bcolors.FAIL + ' TTFB(ms)' +
+        header += bcolors.OKBLUE + ' startup(s)' +\
+                  bcolors.FAIL + ' TTFB(ms)' +\
                   bcolors.OKCYNE + ' rebuffering';
         header += bcolors.OKPINK + ' 240p 360p 480p 720p 1080p';
-        header += bcolors.OKORANGE + ' gw_ip gw_location consumer_ip' +
+        header += bcolors.OKORANGE + ' gw_ip gw_location consumer_ip' +\
                   bcolors.OKGRAY + ' consumer_location' + bcolors.ENDC;
         print header
         walker = 0;
@@ -412,19 +412,19 @@ def decorate():
                 line += bcolors.OKCYNE + 'NULL ' + bcolors.ENDC;
             if len(resolutions[c]) > walker:
                 valid = True;
-                line += bcolors.OKPINK +
-                        str(resolutions[c][walker]['240p']) + ' ' +
-                        str(resolutions[c][walker]['360p']) + ' ' +
-                        str(resolutions[c][walker]['480p']) + ' ' +
-                        str(resolutions[c][walker]['720p']) + ' ' +
+                line += bcolors.OKPINK +\
+                        str(resolutions[c][walker]['240p']) + ' ' +\
+                        str(resolutions[c][walker]['360p']) + ' ' +\
+                        str(resolutions[c][walker]['480p']) + ' ' +\
+                        str(resolutions[c][walker]['720p']) + ' ' +\
                         str(resolutions[c][walker]['1080p']) + ' ' + bcolors.ENDC;
             else:
                 line += bcolors.OKPINK + 'NULL,NULL,NULL,NULL,NULL ' + bcolors.ENDC;
             if len(locations[c]) > walker:
-                line += bcolors.OKORANGE +
-                        str(locations[c][walker][2]) + ' ' + str(locations[c][walker][3]) + ' ' +
-                        bcolors.OKGRAY +
-                        str(locations[c][walker][0]) + ' ' + str(locations[c][walker][1]) +
+                line += bcolors.OKORANGE +\
+                        str(locations[c][walker][2]) + ' ' + str(locations[c][walker][3]) + ' ' +\
+                        bcolors.OKGRAY +\
+                        str(locations[c][walker][0]) + ' ' + str(locations[c][walker][1]) +\
                         bcolors.ENDC;
             else:
                 line += bcolors.OKRANGE + 'NULL NO_LOCATION' + bcolors.OKGRAY + ' NULL NO_LOCATION' + bcolors.ENDC;
