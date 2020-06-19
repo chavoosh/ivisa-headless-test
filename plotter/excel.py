@@ -382,8 +382,8 @@ def decorate():
                   bcolors.FAIL + ' TTFB(ms)' +\
                   bcolors.OKCYNE + ' rebuffering';
         header += bcolors.OKPINK + ' 240p 360p 480p 720p 1080p';
-        header += bcolors.OKORANGE + ' gw_ip gw_location consumer_ip' +\
-                  bcolors.OKGRAY + ' consumer_location' + bcolors.ENDC;
+        header += bcolors.OKORANGE + ' gw_ip gw_location' +\
+                  bcolors.OKGRAY + ' consumer_ip consumer_location' + bcolors.ENDC;
         print header
         walker = 0;
         valid = False;
@@ -427,7 +427,7 @@ def decorate():
                         str(locations[c][walker][0]) + ' ' + str(locations[c][walker][1]) +\
                         bcolors.ENDC;
             else:
-                line += bcolors.OKRANGE + 'NULL NO_LOCATION' + bcolors.OKGRAY + ' NULL NO_LOCATION' + bcolors.ENDC;
+                line += bcolors.OKORANGE + 'NULL NO_LOCATION' + bcolors.OKGRAY + ' NULL NO_LOCATION' + bcolors.ENDC;
             if valid == False:
                 break;
             print line;
